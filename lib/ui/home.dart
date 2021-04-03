@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:beacon_broadcast/beacon_broadcast.dart';
 import 'package:beacons_plugin/beacons_plugin.dart';
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
+import 'package:siteica_user/models/encounter.dart';
+import 'package:siteica_user/services/encounter_service.dart';
 import 'package:uuid_enhanced/uuid.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,6 +19,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  /// TODO
+  /// Testing add and get from DB
+  final _encounterService = Injector.appInstance.get<EncounterService>();
+
   /// Variables for broadcasting
   bool _enabled = false;
   BeaconBroadcast beaconBroadcast = BeaconBroadcast();
@@ -41,6 +48,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  foo() async {
+    List<Encounter> encounters = await _encounterService.getEncounters();
+    print(encounters);
+  }
+
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     if (Platform.isAndroid) {
@@ -54,11 +66,10 @@ class _HomePageState extends State<HomePage> {
 
     BeaconsPlugin.listenToBeacons(beaconEventsController);
 
-    await BeaconsPlugin.addRegion(
-        "foo", _uuidClient);
+    await BeaconsPlugin.addRegion("foo", _uuidClient);
 
     beaconEventsController.stream.listen(
-            (data) {
+        (data) {
           if (data.isNotEmpty) {
             setState(() {
               _beaconResult = data;
@@ -98,6 +109,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initPlatformState();
+    /// TODO
+    foo();
   }
 
   @override
@@ -108,6 +121,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    /// TODO
+    /// Testing add and get from DB
+    _encounterService.addEncounter(
+      ownSeed: "Foo",
+      encounterSeed: "Foo",
+      latitude: 0.0,
+      longitude: 0.0,
+      startDate: 1,
+      endDate: 1,
+      averageDistance: 1,
+      transmitted: 0,
+    );
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text("*Home test"),

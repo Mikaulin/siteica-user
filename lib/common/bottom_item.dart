@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:siteica_user/pages/evolution.dart';
-import 'package:siteica_user/pages/home.dart';
-import 'package:siteica_user/pages/map.dart';
+import 'package:siteica_user/ui/evolution.dart';
+import 'package:siteica_user/ui/home.dart';
+import 'package:siteica_user/ui/map.dart';
 
 class BottomItem {
   final Widget page;

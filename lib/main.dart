@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:siteica_user/pages/start.dart';
+import 'package:injector/injector.dart';
+import 'package:siteica_user/app/locator.dart';
+import 'package:siteica_user/services/database_service.dart';
+import 'package:siteica_user/ui/start.dart';
 
 void main() {
+  // Use this static instance
+
+  //https://pub.flutter-io.cn/packages/sqflite_migration_service/example
+  //https://github.com/FilledStacks/sqflite_migration/blob/main/example/lib/services/database_service.dart
+  setupLocator();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final _databaseService = Injector.appInstance.get<DatabaseService>();
+
+
   @override
   Widget build(BuildContext context) {
+    _databaseService.initialise();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -30,5 +42,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
