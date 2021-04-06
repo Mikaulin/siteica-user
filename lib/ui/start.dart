@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 import 'package:siteica_user/common/bottom_item.dart';
+import 'package:siteica_user/services/database_service.dart';
 
 class StartPage extends StatefulWidget {
   @override
@@ -7,11 +9,26 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
+  final _databaseService = Injector.appInstance.get<DatabaseService>();
+  bool _loading = true;
   int _currentIndex = 0;
+
+  initDatabase() async {
+    await _databaseService.initialise();
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initDatabase();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _loading ? Center(child: CircularProgressIndicator()) : Scaffold(
       body: IndexedStack(
         index: _currentIndex,
         children: [
