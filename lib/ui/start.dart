@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
-import 'package:siteica_user/common/bottom_item.dart';
+import 'file:///D:/Mis%20Documentos/UNED/Curso%204/TFG/Desarrollo/siteica_user/lib/ui/common/bottom_item.dart';
 import 'package:siteica_user/services/database_service.dart';
 
 class StartPage extends StatefulWidget {

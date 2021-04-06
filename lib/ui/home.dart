@@ -1,11 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:beacon_broadcast/beacon_broadcast.dart';
 import 'package:beacons_plugin/beacons_plugin.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:injector/injector.dart';
+import 'package:siteica_user/models/beacon.dart';
+import 'package:siteica_user/models/encounter.dart';
 import 'package:siteica_user/services/encounter_service.dart';
+import 'package:siteica_user/utils/geolocator_util.dart';
 import 'package:uuid_enhanced/uuid.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,37 +23,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  /// TODO
-  /// Testing add and get from DB
   final _encounterService = Injector.appInstance.get<EncounterService>();
 
   /// Variables for broadcasting
-  bool _enabled = false;
   BeaconBroadcast beaconBroadcast = BeaconBroadcast();
   String _uuid = Uuid.randomUuid().toString();
 
   /// Variables for listening
   String _beaconResult = 'Not Scanned Yet.';
   int _nrMessagesReceived = 0;
-  var isRunning = false;
+  var isScanning = false;
   var _uuidClient = Uuid.randomUuid().toString();
   final StreamController<String> beaconEventsController =
       StreamController<String>.broadcast();
 
-  void _startBroadcast() {
-    setState(() {
-      _enabled = !_enabled;
-    });
+  _startBroadcast() {
+    beaconBroadcast.setUUID(_uuid).setMajorId(1).setMinorId(100).start();
+  }
 
-    if (_enabled) {
-      beaconBroadcast.setUUID(_uuid).setMajorId(1).setMinorId(100).start();
-    } else {
-      beaconBroadcast.stop();
-    }
+  foo() async {
+    List<Encounter> encounters = await _encounterService.getEncounters();
+    print(encounters);
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
+    // TODO
+    // Intentar obtener en cada intercambio
+    Position _position = await determinePosition();
+
+    _startBroadcast();
+
     if (Platform.isAndroid) {
       //Prominent disclosure
       await BeaconsPlugin.setDisclosureDialogMessage(
@@ -63,33 +68,35 @@ class _HomePageState extends State<HomePage> {
     await BeaconsPlugin.addRegion("foo", _uuidClient);
 
     beaconEventsController.stream.listen(
-        (data) {
-          if (data.isNotEmpty) {
-            setState(() {
-              _beaconResult = data;
-              _nrMessagesReceived++;
-            });
-            print("Beacons DataReceived: " + data);
+      (data) {
+        if (data.isNotEmpty) {
+          setState(() {
+            _beaconResult = data;
+            _nrMessagesReceived++;
+          });
+          print("Beacons DataReceived: " + data);
+          foo();
+          //Registrar encuentro
+          /// TODO
+          /// Testing add and get from DB
 
-            //Registrar encuentro
-            /// TODO
-            /// Testing add and get from DB
-            _encounterService.addEncounter(
-              ownSeed: "Foo",
-              encounterSeed: "Foo",
-              latitude: 0.0,
-              longitude: 0.0,
-              startDate: 1,
-              endDate: 1,
-              averageDistance: 1,
-              transmitted: 0,
-            );
-          }
-        },
-        onDone: () {},
-        onError: (error) {
-          print("Error: $error");
-        });
+
+          Beacon _beacon = Beacon.fromJson(jsonDecode(data));
+          _encounterService.addEncounter(
+            ownSeed: _uuidClient,
+            encounterSeed: _beacon.uuid,
+            latitude: _position.latitude,
+            longitude: _position.longitude,
+            date: DateTime.now().millisecondsSinceEpoch,
+            distance: double.parse(_beacon.distance),
+          );
+        }
+      },
+      onDone: () {},
+      onError: (error) {
+        print("Error: $error");
+      },
+    );
 
     //Send 'true' to run in background
     await BeaconsPlugin.runInBackground(true);
@@ -99,16 +106,21 @@ class _HomePageState extends State<HomePage> {
         if (call.method == 'scannerReady') {
           await BeaconsPlugin.startMonitoring;
           setState(() {
-            isRunning = true;
+            isScanning = true;
           });
         }
       });
     } else if (Platform.isIOS) {
       await BeaconsPlugin.startMonitoring;
       setState(() {
-        isRunning = true;
+        isScanning = true;
       });
     }
+
+    await BeaconsPlugin.startMonitoring;
+    setState(() {
+      isScanning = true;
+    });
 
     if (!mounted) return;
   }
@@ -117,6 +129,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initPlatformState();
+
   }
 
   @override
@@ -136,15 +149,6 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Todo
-              /// Broadcast test
-              Text(_uuid),
-              Text(
-                _enabled ? 'Emitiendo' : 'Desconectado',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              // Todo
-              /// Client
               Text('$_beaconResult'),
               Padding(
                 padding: EdgeInsets.all(10.0),
@@ -154,47 +158,12 @@ class _HomePageState extends State<HomePage> {
                 height: 20.0,
               ),
               Visibility(
-                visible: isRunning,
-                child: RaisedButton(
-                  onPressed: () async {
-                    if (Platform.isAndroid) {
-                      await BeaconsPlugin.stopMonitoring;
-
-                      setState(() {
-                        isRunning = false;
-                      });
-                    }
-                  },
-                  child: Text('Stop Scanning', style: TextStyle(fontSize: 20)),
-                ),
+                visible: isScanning,
+                child: Text("Escaneando..."),
               ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Visibility(
-                visible: !isRunning,
-                child: RaisedButton(
-                  onPressed: () async {
-                    initPlatformState();
-                    await BeaconsPlugin.startMonitoring;
-
-                    setState(() {
-                      isRunning = true;
-                    });
-                  },
-                  child: Text('Start Scanning', style: TextStyle(fontSize: 20)),
-                ),
-              ),
-              Text(_uuidClient)
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _startBroadcast,
-        tooltip: 'Broadcast',
-        child: Icon(
-            _enabled ? Icons.bluetooth_disabled : Icons.settings_bluetooth),
       ),
     );
   }

@@ -1,4 +1,4 @@
-import 'package:siteica_user/common/constants.dart';
+import 'package:siteica_user/utils/constants.dart';
 import 'package:siteica_user/models/encounter.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -17,10 +17,9 @@ class EncounterService {
     String encounterSeed,
     double latitude,
     double longitude,
-    int startDate,
-    int endDate,
-    int averageDistance,
-    int transmitted,
+    int date,
+    double distance,
+    int transmitted = 0,
   }) async {
     Database _database = await openDatabase(DB_NAME, version: 1);
 
@@ -32,9 +31,8 @@ class EncounterService {
             encounterSeed: encounterSeed,
             latitude: latitude,
             longitude: longitude,
-            startDate: startDate,
-            endDate: endDate,
-            averageDistance: averageDistance,
+            date: date,
+            distance: distance,
             transmitted: transmitted,
           ).toJson());
     } catch (e) {

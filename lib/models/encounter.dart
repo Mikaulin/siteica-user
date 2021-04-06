@@ -9,9 +9,8 @@ class Encounter {
   final String encounterSeed;
   final double latitude;
   final double longitude;
-  final int startDate;
-  final int endDate;
-  final int averageDistance;
+  final int date;
+  final double distance;
   final int transmitted;
 
   Encounter({
@@ -20,9 +19,8 @@ class Encounter {
     this.encounterSeed,
     this.latitude,
     this.longitude,
-    this.startDate,
-    this.endDate,
-    this.averageDistance,
+    this.date,
+    this.distance,
     this.transmitted,
   });
 

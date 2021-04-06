@@ -1,5 +1,5 @@
 import 'package:injector/injector.dart';
-import 'package:siteica_user/common/constants.dart';
+import 'package:siteica_user/utils/constants.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_migration_service/sqflite_migration_service.dart';
 
