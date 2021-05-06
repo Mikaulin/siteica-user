@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
 
     BeaconsPlugin.listenToBeacons(beaconEventsController);
 
-    await BeaconsPlugin.addRegion("foo", _uuidClient);
+    await BeaconsPlugin.addRegion("siteica", _uuidClient);
 
     beaconEventsController.stream.listen(
       (data) {
@@ -129,7 +129,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initPlatformState();
-
   }
 
   @override

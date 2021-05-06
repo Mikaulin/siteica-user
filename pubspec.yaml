@@ -29,7 +29,6 @@ dependencies:
   geolocator: ^7.0.1
   json_serializable: ^3.5.1
   injector: ^2.0.0
-  # Documentar inyección de dependencias y migraciones
   sqflite: ^2.0.0+3
   sqflite_migration_service: ^1.0.6
   uuid_enhanced: ^3.0.2

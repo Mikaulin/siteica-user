@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
-import 'file:///D:/Mis%20Documentos/UNED/Curso%204/TFG/Desarrollo/siteica_user/lib/ui/common/bottom_item.dart';
 import 'package:siteica_user/services/database_service.dart';
+
+import 'common/bottom_item.dart';
 
 class StartPage extends StatefulWidget {
   @override
@@ -9,22 +10,8 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  final _databaseService = Injector.appInstance.get<DatabaseService>();
-  bool _loading = true;
+  bool _loading = false;
   int _currentIndex = 0;
-
-  initDatabase() async {
-    await _databaseService.initialise();
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initDatabase();
-  }
 
   @override
   Widget build(BuildContext context) {

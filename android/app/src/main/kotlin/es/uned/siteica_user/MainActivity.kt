@@ -7,14 +7,14 @@ class MainActivity: FlutterActivity() {
     override fun onPause() {
         super.onPause()
 
-        //Start Background service to scan BLE devices
+        //Habilitar proceso en segundo plano para escanear BLE
         BeaconsPlugin.startBackgroundService(this)
     }
 
     override fun onResume() {
         super.onResume()
 
-        //Stop Background service, app is in foreground
+        //Finalizar proceso en segundo plano para escanear BLE
         BeaconsPlugin.stopBackgroundService(this)
     }
 }

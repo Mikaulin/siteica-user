@@ -16,6 +16,7 @@ class DatabaseService {
       _database,
       migrationFiles: [
         '1_create_schema.sql',
+        '2_create_data_set.sql',
       ],
       verbose: true,
     );
