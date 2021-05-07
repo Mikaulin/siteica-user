@@ -1,22 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
+import 'package:siteica_user/models/province.dart';
+import 'package:siteica_user/services/province_service.dart';
+import 'package:siteica_user/ui/common/title.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
+
+
+  @override
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final _provinceService = Injector.appInstance.get<ProvinceService>();
+  List<Province> _provinces;
+  Province _selectedProvince;
+
+  getProvinces() async {
+    _provinces = await _provinceService.getProvinces();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getProvinces();
+  }
+
   @override
   Widget build(BuildContext context) {
+    _selectedProvince ??= _provinces.first;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("*Register test"),
       ),
-      body: Center(
-        child: Text("Hello, Register!"),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            CommonTitle(title: "Registro"),
+            DropdownButton<Province>(
+              value: _selectedProvince,
+              onChanged: (Province newValue) {
+                setState(() {
+                  _selectedProvince = newValue;
+                });
+              },
+              items: _provinces
+                  .map<DropdownMenuItem<Province>>((Province value) {
+                return DropdownMenuItem<Province>(
+                  value: value,
+                  child: Text(value.provinceName),
+                );
+              }).toList(),
+            )
+          ],
+        ),
       ),
+      // Center(
+      //   child: Text("Hello, Register!"),
+      // ),
     );
   }
-
-
-// await _userService.addUser(
-//   uuid: Uuid.randomUuid().toString(),
-//   date: DateTime.now().millisecondsSinceEpoch,
-//   provinceId: 1,
-// );
 }
