@@ -9,6 +9,6 @@ class ProvinceService {
     Database _database = await openDatabase(DB_NAME, version: 1);
     List<Map> results = await _database.query(provinceTableName);
 
-    return results.map((todo) => Province.fromJson(todo)).toList();
+    return results.map((e) => Province.fromJson(e)).toList();
   }
 }

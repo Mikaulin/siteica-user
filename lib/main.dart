@@ -10,10 +10,6 @@ import 'package:siteica_user/ui/common/progress_indicator.dart';
 
 
 void main() {
-  // Use this static instance
-
-  //https://pub.flutter-io.cn/packages/sqflite_migration_service/example
-  //https://github.com/FilledStacks/sqflite_migration/blob/main/example/lib/services/database_service.dart
   setupLocator();
   runApp(MyApp());
 }
@@ -51,7 +47,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.lightGreen,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: _user == null ? RegisterPage() : StartPage(),
+      home: _user == null ? StartPage() : StartPage(),
     );
   }
 }

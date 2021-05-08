@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:injector/injector.dart';
 import 'package:siteica_user/models/beacon.dart';
 import 'package:siteica_user/models/encounter.dart';
+import 'package:siteica_user/services/ble_service.dart';
 import 'package:siteica_user/services/encounter_service.dart';
 import 'package:siteica_user/utils/geolocator_util.dart';
 import 'package:uuid_enhanced/uuid.dart';
@@ -25,10 +26,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _encounterService = Injector.appInstance.get<EncounterService>();
 
-  /// Variables for broadcasting
-  BeaconBroadcast beaconBroadcast = BeaconBroadcast();
-  String _uuid = Uuid.randomUuid().toString();
-
   /// Variables for listening
   String _beaconResult = 'Not Scanned Yet.';
   int _nrMessagesReceived = 0;
@@ -36,10 +33,6 @@ class _HomePageState extends State<HomePage> {
   var _uuidClient = Uuid.randomUuid().toString();
   final StreamController<String> beaconEventsController =
       StreamController<String>.broadcast();
-
-  _startBroadcast() {
-    beaconBroadcast.setUUID(_uuid).setMajorId(1).setMinorId(100).start();
-  }
 
   foo() async {
     List<Encounter> encounters = await _encounterService.getEncounters();
@@ -52,7 +45,7 @@ class _HomePageState extends State<HomePage> {
     // Intentar obtener en cada intercambio
     Position _position = await determinePosition();
 
-    _startBroadcast();
+    startBroadcast();
 
     if (Platform.isAndroid) {
       //Prominent disclosure
