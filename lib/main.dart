@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.lightGreen,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: _user == null ? StartPage() : StartPage(),
+      home: _user == null ? RegisterPage() : StartPage(),
     );
   }
 }

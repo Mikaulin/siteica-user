@@ -2,15 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:beacon_broadcast/beacon_broadcast.dart';
 import 'package:beacons_plugin/beacons_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:injector/injector.dart';
 import 'package:siteica_user/models/beacon.dart';
 import 'package:siteica_user/models/encounter.dart';
+import 'package:siteica_user/models/user.dart';
 import 'package:siteica_user/services/ble_service.dart';
 import 'package:siteica_user/services/encounter_service.dart';
+import 'package:siteica_user/services/user_service.dart';
 import 'package:siteica_user/utils/geolocator_util.dart';
 import 'package:uuid_enhanced/uuid.dart';
 
@@ -25,6 +26,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _encounterService = Injector.appInstance.get<EncounterService>();
+  final _userService = Injector.appInstance.get<UserService>();
 
   /// Variables for listening
   String _beaconResult = 'Not Scanned Yet.';
@@ -34,18 +36,14 @@ class _HomePageState extends State<HomePage> {
   final StreamController<String> beaconEventsController =
       StreamController<String>.broadcast();
 
-  foo() async {
-    List<Encounter> encounters = await _encounterService.getEncounters();
-    print(encounters);
-  }
-
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
+    User _user = await _userService.getUser();
     // TODO
     // Intentar obtener en cada intercambio
     Position _position = await determinePosition();
 
-    startBroadcast();
+    startBroadcast(_user);
 
     if (Platform.isAndroid) {
       //Prominent disclosure
@@ -67,22 +65,16 @@ class _HomePageState extends State<HomePage> {
             _beaconResult = data;
             _nrMessagesReceived++;
           });
-          print("Beacons DataReceived: " + data);
-          foo();
-          //Registrar encuentro
-          /// TODO
-          /// Testing add and get from DB
-
 
           Beacon _beacon = Beacon.fromJson(jsonDecode(data));
-          _encounterService.addEncounter(
-            ownSeed: _uuidClient,
-            encounterSeed: _beacon.uuid,
-            latitude: _position.latitude,
-            longitude: _position.longitude,
-            date: DateTime.now().millisecondsSinceEpoch,
-            distance: double.parse(_beacon.distance),
-          );
+          // _encounterService.addEncounter(
+          //   ownSeed: _uuidClient,
+          //   encounterSeed: _beacon.uuid,
+          //   latitude: _position.latitude,
+          //   longitude: _position.longitude,
+          //   date: DateTime.now().millisecondsSinceEpoch,
+          //   distance: double.parse(_beacon.distance),
+          // );
         }
       },
       onDone: () {},
