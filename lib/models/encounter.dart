@@ -5,22 +5,22 @@ part 'encounter.g.dart';
 @JsonSerializable()
 class Encounter {
   final int id;
-  final String ownSeed;
-  final String encounterSeed;
+  final int ownSeedId;
+  final String encounterSeedUuid;
   final double latitude;
   final double longitude;
   final int date;
-  final double distance;
+  final int duration;
   final int transmitted;
 
   Encounter({
     this.id,
-    this.ownSeed,
-    this.encounterSeed,
+    this.ownSeedId,
+    this.encounterSeedUuid,
     this.latitude,
     this.longitude,
     this.date,
-    this.distance,
+    this.duration,
     this.transmitted,
   });
 

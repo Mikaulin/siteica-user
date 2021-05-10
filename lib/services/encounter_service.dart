@@ -13,12 +13,12 @@ class EncounterService {
   }
 
   Future addEncounter({
-    String ownSeed,
-    String encounterSeed,
+    int ownSeedId,
+    String encounterSeedUuid,
     double latitude,
     double longitude,
     int date,
-    double distance,
+    int duration,
     int transmitted = 0,
   }) async {
     Database _database = await openDatabase(DB_NAME, version: 1);
@@ -27,12 +27,12 @@ class EncounterService {
       await _database.insert(
           encounterTableName,
           Encounter(
-            ownSeed: ownSeed,
-            encounterSeed: encounterSeed,
+            ownSeedId: ownSeedId,
+            encounterSeedUuid: encounterSeedUuid,
             latitude: latitude,
             longitude: longitude,
             date: date,
-            distance: distance,
+            duration: duration,
             transmitted: transmitted,
           ).toJson());
     } catch (e) {

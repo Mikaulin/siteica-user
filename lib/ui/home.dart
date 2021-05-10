@@ -1,19 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
-import 'package:beacons_plugin/beacons_plugin.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:injector/injector.dart';
-import 'package:siteica_user/models/beacon.dart';
-import 'package:siteica_user/models/encounter.dart';
 import 'package:siteica_user/models/user.dart';
 import 'package:siteica_user/services/ble_service.dart';
+import 'package:siteica_user/services/encounter_seed_service.dart';
 import 'package:siteica_user/services/encounter_service.dart';
 import 'package:siteica_user/services/user_service.dart';
-import 'package:siteica_user/utils/geolocator_util.dart';
-import 'package:uuid_enhanced/uuid.dart';
 
 class HomePage extends StatefulWidget {
   static Route<dynamic> route() => MaterialPageRoute(
@@ -25,95 +18,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _encounterService = Injector.appInstance.get<EncounterService>();
   final _userService = Injector.appInstance.get<UserService>();
+  final _encounterService = Injector.appInstance.get<EncounterService>();
+  final _encounterSeedService =
+      Injector.appInstance.get<EncounterSeedService>();
 
   /// Variables for listening
   String _beaconResult = 'Not Scanned Yet.';
-  int _nrMessagesReceived = 0;
-  var isScanning = false;
-  var _uuidClient = Uuid.randomUuid().toString();
+  bool _isScanning = false;
   final StreamController<String> beaconEventsController =
       StreamController<String>.broadcast();
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
+  _configureDeviceForBle() async {
     User _user = await _userService.getUser();
-    // TODO
-    // Intentar obtener en cada intercambio
-    Position _position = await determinePosition();
-
     startBroadcast(_user);
-
-    if (Platform.isAndroid) {
-      //Prominent disclosure
-      await BeaconsPlugin.setDisclosureDialogMessage(
-          title: "Need Location Permission",
-          message: "This app collects location data to work with beacons.");
-
-      await BeaconsPlugin.clearDisclosureDialogShowFlag(false);
-    }
-
-    BeaconsPlugin.listenToBeacons(beaconEventsController);
-
-    await BeaconsPlugin.addRegion("siteica", _uuidClient);
-
-    beaconEventsController.stream.listen(
-      (data) {
-        if (data.isNotEmpty) {
-          setState(() {
-            _beaconResult = data;
-            _nrMessagesReceived++;
-          });
-
-          Beacon _beacon = Beacon.fromJson(jsonDecode(data));
-          // _encounterService.addEncounter(
-          //   ownSeed: _uuidClient,
-          //   encounterSeed: _beacon.uuid,
-          //   latitude: _position.latitude,
-          //   longitude: _position.longitude,
-          //   date: DateTime.now().millisecondsSinceEpoch,
-          //   distance: double.parse(_beacon.distance),
-          // );
-        }
-      },
-      onDone: () {},
-      onError: (error) {
-        print("Error: $error");
-      },
+    startObserver(
+      _user,
+      beaconEventsController,
+      _beaconResult,
+      _isScanning,
+      _encounterService,
+      _encounterSeedService,
     );
-
-    //Send 'true' to run in background
-    await BeaconsPlugin.runInBackground(true);
-
-    if (Platform.isAndroid) {
-      BeaconsPlugin.channel.setMethodCallHandler((call) async {
-        if (call.method == 'scannerReady') {
-          await BeaconsPlugin.startMonitoring;
-          setState(() {
-            isScanning = true;
-          });
-        }
-      });
-    } else if (Platform.isIOS) {
-      await BeaconsPlugin.startMonitoring;
-      setState(() {
-        isScanning = true;
-      });
-    }
-
-    await BeaconsPlugin.startMonitoring;
-    setState(() {
-      isScanning = true;
-    });
-
-    if (!mounted) return;
   }
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    _configureDeviceForBle();
   }
 
   @override
@@ -137,12 +69,11 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: EdgeInsets.all(10.0),
               ),
-              Text('$_nrMessagesReceived'),
               SizedBox(
                 height: 20.0,
               ),
               Visibility(
-                visible: isScanning,
+                visible: _isScanning,
                 child: Text("Escaneando..."),
               ),
             ],
