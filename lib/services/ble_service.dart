@@ -52,34 +52,19 @@ startBroadcast(User _user) async {
   });
 }
 
-Future<void> startObserver(
+startObserver(
   User _user,
   StreamController<String> _streamController,
   EncounterService _encounterService,
   EncounterSeedService _encounterSeedService,
 ) async {
-  Position _position;
   await _checkLocationPermission();
 
   BeaconsPlugin.listenToBeacons(_streamController);
 
   _streamController.stream.listen(
     (data) async {
-      if (data.isNotEmpty) {
-        _position = await determinePosition();
-        EncounterSeed _encounterSeed =
-            await _encounterSeedService.getEncounterSeed(_user);
-
-        Beacon _beacon = Beacon.fromJson(jsonDecode(data));
-        _encounterService.addEncounter(
-          ownSeedId: _encounterSeed.id,
-          encounterSeedUuid: _beacon.uuid,
-          latitude: _position.latitude,
-          longitude: _position.longitude,
-          date: DateTime.now().millisecondsSinceEpoch,
-          distance: double.parse(_beacon.distance),
-        );
-      }
+      _addEncounter(data, _user, _encounterService, _encounterSeedService);
     },
     onDone: () {},
     onError: (error) {
@@ -109,6 +94,34 @@ _startMonitoring() async {
         await BeaconsPlugin.startMonitoring;
       }
     });
+  } else if (Platform.isIOS) {
+    await BeaconsPlugin.startMonitoring;
   }
-  await BeaconsPlugin.startMonitoring;
+}
+
+_addEncounter(
+  String _encounterData,
+  User _user,
+  EncounterService _encounterService,
+  EncounterSeedService _encounterSeedService,
+) async {
+  if (_encounterData.isNotEmpty) {
+    Position _position = await determinePosition();
+    EncounterSeed _encounterSeed =
+        await _encounterSeedService.getEncounterSeed(_user);
+
+    Beacon _beacon = Beacon.fromJson(jsonDecode(_encounterData));
+    double _distance = double.parse(_beacon.distance);
+
+    if (_distance <= ENCOUNTER_MIN_DISTANCE) {
+      _encounterService.addEncounter(
+        ownSeedId: _encounterSeed.id,
+        encounterSeedUuid: _beacon.uuid,
+        latitude: _position.latitude,
+        longitude: _position.longitude,
+        date: DateTime.now().millisecondsSinceEpoch,
+        distance: _distance,
+      );
+    }
+  }
 }
