@@ -52,31 +52,16 @@ startBroadcast(User _user) async {
   });
 }
 
-// Platform messages are asynchronous, so we initialize in an async method.
 Future<void> startObserver(
   User _user,
   StreamController<String> _streamController,
-  String _beaconResult,
-  bool _isScanning,
   EncounterService _encounterService,
   EncounterSeedService _encounterSeedService,
 ) async {
-  // TODO
-  // Intentar obtener en cada intercambio
-  Position _position = await determinePosition();
-
-  if (Platform.isAndroid) {
-    //Prominent disclosure
-    await BeaconsPlugin.setDisclosureDialogMessage(
-        title: "Need Location Permission",
-        message: "This app collects location data to work with beacons.");
-
-    await BeaconsPlugin.clearDisclosureDialogShowFlag(false);
-  }
+  Position _position;
+  await _checkLocationPermission();
 
   BeaconsPlugin.listenToBeacons(_streamController);
-
-  //await BeaconsPlugin.addRegion("siteica", _uuidClient);
 
   _streamController.stream.listen(
     (data) async {
@@ -85,8 +70,6 @@ Future<void> startObserver(
         EncounterSeed _encounterSeed =
             await _encounterSeedService.getEncounterSeed(_user);
 
-        _beaconResult = data;
-
         Beacon _beacon = Beacon.fromJson(jsonDecode(data));
         _encounterService.addEncounter(
           ownSeedId: _encounterSeed.id,
@@ -94,38 +77,38 @@ Future<void> startObserver(
           latitude: _position.latitude,
           longitude: _position.longitude,
           date: DateTime.now().millisecondsSinceEpoch,
-          duration: 0,
+          distance: double.parse(_beacon.distance),
         );
-        print("Beacon: $data");
       }
-
-      var _list = await _encounterService.getEncounters();
-      print("foo");
     },
     onDone: () {},
     onError: (error) {
-      print("Error: $error");
+      print("Ha ocurrido un error: $error");
     },
   );
 
-  //Send 'true' to run in background
   await BeaconsPlugin.runInBackground(true);
+  await _startMonitoring();
+}
 
+_checkLocationPermission() async {
+  if (Platform.isAndroid) {
+    await BeaconsPlugin.setDisclosureDialogMessage(
+        title: "Se requieren permisos de localización",
+        message:
+            "Esta aplicación recopila información de los encuentros cercanos.");
+
+    await BeaconsPlugin.clearDisclosureDialogShowFlag(false);
+  }
+}
+
+_startMonitoring() async {
   if (Platform.isAndroid) {
     BeaconsPlugin.channel.setMethodCallHandler((call) async {
       if (call.method == 'scannerReady') {
         await BeaconsPlugin.startMonitoring;
-
-        _isScanning = true;
       }
     });
-  } else if (Platform.isIOS) {
-    await BeaconsPlugin.startMonitoring;
-
-    _isScanning = true;
   }
-
   await BeaconsPlugin.startMonitoring;
-
-  _isScanning = true;
 }

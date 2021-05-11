@@ -23,9 +23,6 @@ class _HomePageState extends State<HomePage> {
   final _encounterSeedService =
       Injector.appInstance.get<EncounterSeedService>();
 
-  /// Variables for listening
-  String _beaconResult = 'Not Scanned Yet.';
-  bool _isScanning = false;
   final StreamController<String> beaconEventsController =
       StreamController<String>.broadcast();
 
@@ -35,8 +32,6 @@ class _HomePageState extends State<HomePage> {
     startObserver(
       _user,
       beaconEventsController,
-      _beaconResult,
-      _isScanning,
       _encounterService,
       _encounterSeedService,
     );
@@ -65,17 +60,8 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text('$_beaconResult'),
-              Padding(
-                padding: EdgeInsets.all(10.0),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Visibility(
-                visible: _isScanning,
-                child: Text("Escaneando..."),
-              ),
+              Text('Foo...'),
+
             ],
           ),
         ),

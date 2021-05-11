@@ -10,7 +10,7 @@ class Encounter {
   final double latitude;
   final double longitude;
   final int date;
-  final int duration;
+  final double distance;
   final int transmitted;
 
   Encounter({
@@ -20,7 +20,7 @@ class Encounter {
     this.latitude,
     this.longitude,
     this.date,
-    this.duration,
+    this.distance,
     this.transmitted,
   });
 

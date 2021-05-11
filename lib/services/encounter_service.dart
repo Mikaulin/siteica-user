@@ -18,7 +18,7 @@ class EncounterService {
     double latitude,
     double longitude,
     int date,
-    int duration,
+    double distance,
     int transmitted = 0,
   }) async {
     Database _database = await openDatabase(DB_NAME, version: 1);
@@ -32,7 +32,7 @@ class EncounterService {
             latitude: latitude,
             longitude: longitude,
             date: date,
-            duration: duration,
+            distance: distance,
             transmitted: transmitted,
           ).toJson());
     } catch (e) {

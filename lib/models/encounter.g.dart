@@ -14,7 +14,7 @@ Encounter _$EncounterFromJson(Map<String, dynamic> json) {
     latitude: (json['latitude'] as num)?.toDouble(),
     longitude: (json['longitude'] as num)?.toDouble(),
     date: json['date'] as int,
-    duration: json['duration'] as int,
+    distance:(json['distance'] as num)?.toDouble(),
     transmitted: json['transmitted'] as int,
   );
 }
@@ -26,6 +26,6 @@ Map<String, dynamic> _$EncounterToJson(Encounter instance) => <String, dynamic>{
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'date': instance.date,
-      'duration': instance.duration,
+      'distance': instance.distance,
       'transmitted': instance.transmitted,
     };
