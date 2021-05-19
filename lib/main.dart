@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
-import 'package:siteica_user/app/locator.dart';
+import 'package:siteica_user/app/configurator.dart';
 import 'package:siteica_user/models/user.dart';
 import 'package:siteica_user/services/database_service.dart';
 import 'package:siteica_user/services/user_service.dart';
-import 'package:siteica_user/ui/register.dart';
 import 'package:siteica_user/ui/start.dart';
 import 'package:siteica_user/ui/common/progress_indicator.dart';
+import 'package:siteica_user/ui/welcome.dart';
 
 
 void main() {
-  setupLocator();
-  runApp(MyApp());
+  setupDependencyInjector();
+  runApp(SiteicaApp());
 }
 
-class MyApp extends StatefulWidget {
+class SiteicaApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _SiteicaAppState createState() => _SiteicaAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _SiteicaAppState extends State<SiteicaApp> {
   final _userService = Injector.appInstance.get<UserService>();
   final _databaseService = Injector.appInstance.get<DatabaseService>();
   bool _isLoading = true;
@@ -44,10 +44,10 @@ class _MyAppState extends State<MyApp> {
     return _isLoading ? CommonProgressIndicator() : MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.lightGreen,
+        primarySwatch: Colors.lightBlue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: _user == null ? RegisterPage() : StartPage(),
+      home: _user == null ? WelcomePage() : StartPage(),
     );
   }
 }

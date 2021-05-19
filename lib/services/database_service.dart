@@ -3,7 +3,6 @@ import 'package:siteica_user/utils/constants.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_migration_service/sqflite_migration_service.dart';
 
-
 class DatabaseService {
   final _migrationService =
       Injector.appInstance.get<DatabaseMigrationService>();

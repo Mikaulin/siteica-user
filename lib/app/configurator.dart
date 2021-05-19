@@ -8,7 +8,7 @@ import 'package:sqflite_migration_service/sqflite_migration_service.dart';
 
 final injector = Injector.appInstance;
 
-void setupLocator() {
+void setupDependencyInjector() {
   injector.registerDependency<DatabaseMigrationService>(
       () => DatabaseMigrationService());
   injector.registerDependency<DatabaseService>(() => DatabaseService());

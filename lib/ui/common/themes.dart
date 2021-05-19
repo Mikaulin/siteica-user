@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
-  onPrimary: Colors.black87,
+  onPrimary: Color(0xff6C63FF),
   primary: Colors.grey[300],
   minimumSize: Size(88, 36),
   padding: EdgeInsets.symmetric(horizontal: 16),

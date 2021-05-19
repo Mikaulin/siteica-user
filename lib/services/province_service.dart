@@ -7,7 +7,11 @@ const String provinceTableName = 'province';
 class ProvinceService {
   Future<List<Province>> getProvinces() async {
     Database _database = await openDatabase(DB_NAME, version: 1);
-    List<Map> results = await _database.query(provinceTableName);
+    List<Map> results = await _database.query(
+      provinceTableName,
+      where: 'deleted = ?',
+      whereArgs: [0],
+    );
 
     return results.map((e) => Province.fromJson(e)).toList();
   }

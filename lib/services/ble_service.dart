@@ -58,10 +58,12 @@ startObserver(
   EncounterService _encounterService,
   EncounterSeedService _encounterSeedService,
 ) async {
-  await _checkLocationPermission();
+  /// Mensaje de información sobre permisos de ubicación
+  await _showDisclosureMessage();
 
+  /// Asignar el controlador del stream de datos
   BeaconsPlugin.listenToBeacons(_streamController);
-
+  /// Suscripción al stream
   _streamController.stream.listen(
     (data) async {
       _addEncounter(data, _user, _encounterService, _encounterSeedService);
@@ -76,7 +78,7 @@ startObserver(
   await _startMonitoring();
 }
 
-_checkLocationPermission() async {
+_showDisclosureMessage() async {
   if (Platform.isAndroid) {
     await BeaconsPlugin.setDisclosureDialogMessage(
         title: "Se requieren permisos de localización",
@@ -99,7 +101,7 @@ _startMonitoring() async {
   }
 }
 
-_addEncounter(
+  _addEncounter(
   String _encounterData,
   User _user,
   EncounterService _encounterService,
