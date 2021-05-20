@@ -7,7 +7,7 @@ import 'package:siteica_user/models/risk_encounter.dart';
 const String riskEncounterTableName = 'risk_encounter';
 
 class RiskEncounterService {
-  Future<List<RiskEncounter>> getRiskEncounters() async {
+  Future<List<RiskEncounter>> getAllRiskEncounters() async {
     Database _database = await openDatabase(DB_NAME, version: 1);
 
     int _finishTime = DateTime.now().millisecondsSinceEpoch;
@@ -16,6 +16,21 @@ class RiskEncounterService {
     List<Map> _results = await _database.rawQuery(
       'SELECT * FROM risk_encounter '
           'WHERE (date >= ? AND date <= ?) ',
+        [_startTime, _finishTime]
+    );
+
+    return _results.map((e) => RiskEncounter.fromJson(e)).toList();
+  }
+
+  Future<List<RiskEncounter>> getRiskEncounters() async {
+    Database _database = await openDatabase(DB_NAME, version: 1);
+
+    int _finishTime = DateTime.now().millisecondsSinceEpoch;
+    int _startTime = _finishTime - ENCOUNTER_RISK_TIME_PERIOD;
+
+    List<Map> _results = await _database.rawQuery(
+        'SELECT * FROM risk_encounter '
+            'WHERE (date >= ? AND date <= ?) AND deleted = 0',
         [_startTime, _finishTime]
     );
 
@@ -32,11 +47,22 @@ class RiskEncounterService {
     EncounterSeed _riskEncounter;
 
     _riskSeeds.takeWhile((e) => _riskEncounter == null).forEach((_riskSeed) {
-      _riskEncounter = _selfSeeds.firstWhere((_selfSeed) => _riskSeed.encounterSeedUuid == _selfSeed.seedUuid, orElse: () => null);
+      _riskEncounter = _selfSeeds.firstWhere(
+          (_selfSeed) => _riskSeed.encounterSeedUuid == _selfSeed.seedUuid,
+          orElse: () => null);
+      ///TODO: solo sale el mensaje una vez, es lo correcto?
+      _riskSeed.deleted = 1;
+      updateRiskEncounter(_riskSeed);
     });
 
-    ///TODO  Actualizar los registros para marcarlos como ya leídos
-
     return _riskEncounter;
+  }
+
+  Future<int> updateRiskEncounter(RiskEncounter _riskEncounter) async {
+    Database _database = await openDatabase(DB_NAME, version: 1);
+
+    return await _database.rawUpdate(
+        'UPDATE $riskEncounterTableName SET deleted = ? WHERE id = ?',
+        [_riskEncounter.deleted, _riskEncounter.id]);
   }
 }

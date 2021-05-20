@@ -10,7 +10,7 @@ class RiskEncounter {
   final double latitude;
   final double longitude;
   final int date;
-  final int deleted;
+  int deleted;
 
   RiskEncounter({
     this.id,

@@ -26,7 +26,7 @@ class _MapPageState extends State<MapPage> {
 
   _getRiskEncounters() async {
     List<RiskEncounter> _riskEncounters =
-        await _riskEncounterService.getRiskEncounters();
+        await _riskEncounterService.getAllRiskEncounters();
     _riskEncounters.forEach((element) {
       _riskMarkers.add(
         Marker(
