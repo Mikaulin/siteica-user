@@ -36,4 +36,19 @@ class EncounterSeedService {
       return null;
     }
   }
+
+  Future<List<EncounterSeed>> getEncounterSeeds(User _user) async {
+    Database _database = await openDatabase(DB_NAME, version: 1);
+
+    int _finishTime = DateTime.now().millisecondsSinceEpoch;
+    int _startTime = _finishTime - ENCOUNTER_RISK_TIME_PERIOD;
+
+    List<Map> _results = await _database.rawQuery(
+        'SELECT * FROM encounter_seed '
+            'WHERE (date >= ? AND date <= ?) AND userId = ? ',
+        [_startTime, _finishTime, _user.id]
+    );
+
+    return _results.map((e) => EncounterSeed.fromJson(e)).toList();
+  }
 }

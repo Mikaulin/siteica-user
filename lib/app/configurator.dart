@@ -3,6 +3,7 @@ import 'package:siteica_user/services/database_service.dart';
 import 'package:siteica_user/services/encounter_seed_service.dart';
 import 'package:siteica_user/services/encounter_service.dart';
 import 'package:siteica_user/services/province_service.dart';
+import 'package:siteica_user/services/risk_encounter_service.dart';
 import 'package:siteica_user/services/user_service.dart';
 import 'package:sqflite_migration_service/sqflite_migration_service.dart';
 
@@ -17,4 +18,6 @@ void setupDependencyInjector() {
   injector
       .registerDependency<EncounterSeedService>(() => EncounterSeedService());
   injector.registerDependency<ProvinceService>(() => ProvinceService());
+  injector
+      .registerDependency<RiskEncounterService>(() => RiskEncounterService());
 }

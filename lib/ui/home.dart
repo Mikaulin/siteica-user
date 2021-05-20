@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:bluetooth_enable/bluetooth_enable.dart';
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
+import 'package:siteica_user/models/encounter_seed.dart';
 import 'package:siteica_user/models/user.dart';
 import 'package:siteica_user/services/ble_service.dart';
 import 'package:siteica_user/services/encounter_seed_service.dart';
 import 'package:siteica_user/services/encounter_service.dart';
+import 'package:siteica_user/services/risk_encounter_service.dart';
 import 'package:siteica_user/services/user_service.dart';
 import 'package:siteica_user/ui/common/info_title.dart';
 import 'package:siteica_user/ui/common/themes.dart';
@@ -26,11 +28,14 @@ class _HomePageState extends State<HomePage> {
   final _encounterService = Injector.appInstance.get<EncounterService>();
   final _encounterSeedService =
       Injector.appInstance.get<EncounterSeedService>();
+  final _riskEncounterService =
+      Injector.appInstance.get<RiskEncounterService>();
 
   final StreamController<String> beaconEventsController =
       StreamController<String>.broadcast();
 
   bool _bluetoothEnabled = false;
+  bool _riskFound = false;
 
   _configureDeviceForBle() async {
     User _user = await _userService.getUser();
@@ -41,15 +46,26 @@ class _HomePageState extends State<HomePage> {
       _encounterService,
       _encounterSeedService,
     );
+    await _checkSelfRisk(_user);
   }
 
-  Future<void> _checkBluetoothAndEnable() async {
+  _checkBluetoothAndEnable() async {
     BluetoothEnable.enableBluetooth.then((value) {
       if (value == "true") {
         setState(() {
           _bluetoothEnabled = true;
         });
       }
+    });
+  }
+
+  _checkSelfRisk(User _user) async {
+    List<EncounterSeed> _encounterSeeds =
+        await _encounterSeedService.getEncounterSeeds(_user);
+    EncounterSeed _firstRiskEncounter =
+        await _riskEncounterService.checkSelfRisk(_user, _encounterSeeds);
+    setState(() {
+      _riskFound = _firstRiskEncounter != null;
     });
   }
 
@@ -69,16 +85,19 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _riskEncounterData() {
     return [
       CommonTitle(title: "Contactos de riesgo"),
-      Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Text(
-          "No se han detectado contactos de riesgo",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-        ),
+      InformationTitle(
+        title: _riskFound
+            ? "Se ha detectado contacto de riesgo."
+            : "No se han detectado contactos de riesgo.",
+        warning: _riskFound,
       ),
       Text(
-        "Serás informado en caso de que se registre un posible contacto "
-        "de riesgo tras el análisis automatizado.",
+        _riskFound
+            ? "Te recomendamos que contactes con tu centro de salud y sigas "
+            "las recomendaciones que te ofrezcan."
+            : "Serás informado en caso de que se registre un posible contacto "
+                "de riesgo tras el análisis automatizado.",
+
       ),
       Padding(
         padding: const EdgeInsets.only(bottom: 21.0),

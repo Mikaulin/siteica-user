@@ -56,6 +56,7 @@ CREATE TABLE risk_encounter
     encounterSeedUuid TEXT,
     latitude          FLOAT,
     longitude         FLOAT,
+    date              INT,
     deleted           INT
 );
 

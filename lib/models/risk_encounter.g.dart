@@ -1,31 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'encounter.dart';
+part of 'risk_encounter.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Encounter _$EncounterFromJson(Map<String, dynamic> json) {
-  return Encounter(
+RiskEncounter _$RiskEncounterFromJson(Map<String, dynamic> json) {
+  return RiskEncounter(
     id: json['id'] as int,
-    ownSeedId: json['ownSeedId'] as int,
+    riskSeedUuid: json['riskSeedUuid'] as String,
     encounterSeedUuid: json['encounterSeedUuid'] as String,
     latitude: (json['latitude'] as num)?.toDouble(),
     longitude: (json['longitude'] as num)?.toDouble(),
     date: json['date'] as int,
-    distance: (json['distance'] as num)?.toDouble(),
-    transmitted: json['transmitted'] as int,
+    deleted: json['deleted'] as int,
   );
 }
 
-Map<String, dynamic> _$EncounterToJson(Encounter instance) => <String, dynamic>{
+Map<String, dynamic> _$RiskEncounterToJson(RiskEncounter instance) =>
+    <String, dynamic>{
       'id': instance.id,
-      'ownSeedId': instance.ownSeedId,
+      'riskSeedUuid': instance.riskSeedUuid,
       'encounterSeedUuid': instance.encounterSeedUuid,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'date': instance.date,
-      'distance': instance.distance,
-      'transmitted': instance.transmitted,
+      'deleted': instance.deleted,
     };
