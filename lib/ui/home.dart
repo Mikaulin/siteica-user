@@ -13,6 +13,7 @@ import 'package:siteica_user/services/user_service.dart';
 import 'package:siteica_user/ui/common/info_title.dart';
 import 'package:siteica_user/ui/common/themes.dart';
 import 'package:siteica_user/ui/common/title.dart';
+import 'package:siteica_user/ui/notification.dart';
 
 class HomePage extends StatefulWidget {
   static Route<dynamic> route() => MaterialPageRoute(
@@ -115,7 +116,8 @@ class _HomePageState extends State<HomePage> {
         warning: !_bluetoothEnabled,
       ),
       Text(
-        "Siteica hace uso del Bluetooth para comunicarse con dispositivos cercanos y mantenerte protegido.",
+        "Siteica hace uso del Bluetooth para comunicarse con dispositivos "
+            "cercanos y mantenerte protegido.",
       )
     ];
 
@@ -131,6 +133,7 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
+
     _widgetList.add(Padding(
       padding: const EdgeInsets.only(bottom: 21.0),
     ));
@@ -150,7 +153,12 @@ class _HomePageState extends State<HomePage> {
       ),
       ElevatedButton(
         style: raisedButtonStyle,
-        onPressed: null,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NotificationPage()),
+          );
+        },
         child: Text('Notificar'),
       ),
     ];
