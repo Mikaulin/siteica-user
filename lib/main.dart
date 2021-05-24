@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:injector/injector.dart';
 import 'package:siteica_user/app/configurator.dart';
 import 'package:siteica_user/models/user.dart';
@@ -7,7 +8,6 @@ import 'package:siteica_user/services/user_service.dart';
 import 'package:siteica_user/ui/start.dart';
 import 'package:siteica_user/ui/common/progress_indicator.dart';
 import 'package:siteica_user/ui/welcome.dart';
-
 
 void main() {
   setupDependencyInjector();
@@ -41,13 +41,19 @@ class _SiteicaAppState extends State<SiteicaApp> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading ? CommonProgressIndicator() : MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: _user == null ? WelcomePage() : StartPage(),
-    );
+    return _isLoading
+        ? CommonProgressIndicator()
+        : MaterialApp(
+            localizationsDelegates: [GlobalMaterialLocalizations.delegate],
+            title: 'Flutter Demo',
+            supportedLocales: [
+              const Locale('es'),
+            ],
+            theme: ThemeData(
+              primarySwatch: Colors.lightBlue,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: _user == null ? WelcomePage() : StartPage(),
+          );
   }
 }

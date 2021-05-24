@@ -26,6 +26,8 @@ dependencies:
   bluetooth_enable: ^0.1.1
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_map: ^0.12.0
   geolocator: ^7.0.1
   intro_slider: ^2.4.3
