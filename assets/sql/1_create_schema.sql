@@ -43,12 +43,11 @@ CREATE TABLE private_notification
 (
     id              INTEGER PRIMARY KEY,
     userId          INTEGER,
-    otp_value       TEXT,
-    diagnostic_date INT,
-    submitted_date  INT,
+    otpValue       TEXT,
+    diagnosticDate INT,
+    submittedDate  INT,
     FOREIGN KEY (userId) REFERENCES user (id)
 );
-
 
 CREATE TABLE risk_encounter
 (
@@ -57,6 +56,15 @@ CREATE TABLE risk_encounter
     encounterSeedUuid TEXT,
     latitude          FLOAT,
     longitude         FLOAT,
+    date              INT,
+    duration          INT,
+    deleted           INT
+);
+
+CREATE TABLE risk_encounter_analysis
+(
+    id                INTEGER PRIMARY KEY,
+    riskFound        INT,
     date              INT,
     deleted           INT
 );

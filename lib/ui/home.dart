@@ -7,17 +7,22 @@ import 'package:injector/injector.dart';
 import 'package:siteica_user/models/encounter.dart';
 import 'package:siteica_user/models/encounter_seed.dart';
 import 'package:siteica_user/models/risk_encounter.dart';
+import 'package:siteica_user/models/risk_encounter_analysis.dart';
 import 'package:siteica_user/models/user.dart';
 import 'package:siteica_user/services/ble_service.dart';
 import 'package:siteica_user/services/encounter_seed_service.dart';
 import 'package:siteica_user/services/encounter_service.dart';
+import 'package:siteica_user/services/risk_encounter_analysis_service.dart';
 import 'package:siteica_user/services/risk_encounter_service.dart';
 import 'package:siteica_user/services/user_service.dart';
 import 'package:siteica_user/ui/common/info_title.dart';
 import 'package:siteica_user/ui/common/themes.dart';
 import 'package:siteica_user/ui/common/title.dart';
 import 'package:siteica_user/ui/notification.dart';
+import 'package:siteica_user/utils/constants.dart';
 import 'dart:io' show Platform;
+
+import 'package:siteica_user/utils/time_util.dart';
 
 class HomePage extends StatefulWidget {
   static Route<dynamic> route() => MaterialPageRoute(
@@ -35,6 +40,8 @@ class _HomePageState extends State<HomePage> {
       Injector.appInstance.get<EncounterSeedService>();
   final _riskEncounterService =
       Injector.appInstance.get<RiskEncounterService>();
+  final _riskEncounterAnalysisService =
+      Injector.appInstance.get<RiskEncounterAnalysisService>();
 
   final StreamController<String> beaconEventsController =
       StreamController<String>.broadcast();
@@ -55,6 +62,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _checkBluetoothAndEnable() async {
+    //TODO: eliminar
     List<Encounter> _foo = await _encounterService.getEncounters();
 
     print("foo");
@@ -69,14 +77,24 @@ class _HomePageState extends State<HomePage> {
   }
 
   _checkSelfRisk(User _user) async {
-    List<EncounterSeed> _encounterSeeds =
-        await _encounterSeedService.getEncounterSeeds(_user);
-    List<RiskEncounter> _myRiskEncounters = await _riskEncounterService
-        .getSelfEncounterRisk(_user, _encounterSeeds);
+    RiskEncounterAnalysis _riskEncounterAnalysis =
+        await _riskEncounterAnalysisService.getLastRiskEncounterAnalysis();
 
-    setState(() {
-      _riskFound = _myRiskEncounters.isNotEmpty;
-    });
+    if (_riskEncounterAnalysis == null ||
+        timeExceeded(
+            _riskEncounterAnalysis.date, ENCOUNTER_RISK_ANALYSIS_TIME_PERIOD)) {
+      List<EncounterSeed> _encounterSeeds =
+          await _encounterSeedService.getEncounterSeeds(_user);
+      List<RiskEncounter> _myRiskEncounters = await _riskEncounterService
+          .getSelfEncounterRisk(_user, _encounterSeeds);
+
+      _riskFound = _myRiskEncounters
+          .any((element) => element.duration >= RISK_DURATION_INTERVAL);
+
+      _riskEncounterAnalysisService.addRiskEncounterAnalysis(_riskFound);
+
+      setState(() {});
+    }
   }
 
   @override

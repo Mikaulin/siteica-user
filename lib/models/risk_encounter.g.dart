@@ -14,6 +14,7 @@ RiskEncounter _$RiskEncounterFromJson(Map<String, dynamic> json) {
     latitude: (json['latitude'] as num)?.toDouble(),
     longitude: (json['longitude'] as num)?.toDouble(),
     date: json['date'] as int,
+    duration: json['duration'] as int,
     deleted: json['deleted'] as int,
   );
 }
@@ -26,5 +27,6 @@ Map<String, dynamic> _$RiskEncounterToJson(RiskEncounter instance) =>
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'date': instance.date,
+      'duration': instance.duration,
       'deleted': instance.deleted,
     };

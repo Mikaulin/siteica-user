@@ -51,11 +51,6 @@ class RiskEncounterService {
           .toList();
 
       _myRiskEncounters.addAll(_myRiskEncountersBySeed);
-
-      /// Una vez encontrado un encuentro de riesgo, comprobamos tiempo
-      ///TODO: solo sale el mensaje una vez, es lo correcto?
-      // _riskSeed.deleted = 1;
-      // updateRiskEncounter(_riskSeed);
     });
 
     return _riskEncounters;
