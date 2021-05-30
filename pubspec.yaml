@@ -22,7 +22,7 @@ environment:
 
 dependencies:
   beacon_broadcast: ^0.2.3
-  beacons_plugin: ^1.0.20
+  beacons_plugin: ^2.0.0
   bluetooth_enable: ^0.1.1
   flutter:
     sdk: flutter

@@ -11,6 +11,7 @@ class Encounter {
   final double longitude;
   final int date;
   final double distance;
+  final int duration;
   final int transmitted;
 
   Encounter({
@@ -21,6 +22,7 @@ class Encounter {
     this.longitude,
     this.date,
     this.distance,
+    this.duration,
     this.transmitted,
   });
 

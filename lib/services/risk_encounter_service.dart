@@ -14,10 +14,9 @@ class RiskEncounterService {
     int _startTime = _finishTime - ENCOUNTER_RISK_TIME_PERIOD;
 
     List<Map> _results = await _database.rawQuery(
-      'SELECT * FROM risk_encounter '
-          'WHERE (date >= ? AND date <= ?) ',
-        [_startTime, _finishTime]
-    );
+        'SELECT * FROM risk_encounter '
+        'WHERE (date >= ? AND date <= ?) ',
+        [_startTime, _finishTime]);
 
     return _results.map((e) => RiskEncounter.fromJson(e)).toList();
   }
@@ -30,32 +29,36 @@ class RiskEncounterService {
 
     List<Map> _results = await _database.rawQuery(
         'SELECT * FROM risk_encounter '
-            'WHERE (date >= ? AND date <= ?) AND deleted = 0',
-        [_startTime, _finishTime]
-    );
+        'WHERE (date >= ? AND date <= ?) AND deleted = 0',
+        [_startTime, _finishTime]);
 
     return _results.map((e) => RiskEncounter.fromJson(e)).toList();
   }
 
-  Future<EncounterSeed> checkSelfRisk(
+  Future<List<RiskEncounter>> getSelfEncounterRisk(
     User _user,
-    List<EncounterSeed> _selfSeeds,
+    List<EncounterSeed> _myEncounterSeeds,
   ) async {
     /// Encuentros de riesgo
-    List<RiskEncounter> _riskSeeds = await getRiskEncounters();
+    List<RiskEncounter> _riskEncounters = await getAllRiskEncounters();
 
-    EncounterSeed _riskEncounter;
+    List<RiskEncounter> _myRiskEncounters = [];
 
-    _riskSeeds.takeWhile((e) => _riskEncounter == null).forEach((_riskSeed) {
-      _riskEncounter = _selfSeeds.firstWhere(
-          (_selfSeed) => _riskSeed.encounterSeedUuid == _selfSeed.seedUuid,
-          orElse: () => null);
+    _myEncounterSeeds.forEach((_myEncounterSeed) {
+      List<RiskEncounter> _myRiskEncountersBySeed = _riskEncounters
+          .where((_riskEncounter) =>
+              _riskEncounter.encounterSeedUuid == _myEncounterSeed.seedUuid)
+          .toList();
+
+      _myRiskEncounters.addAll(_myRiskEncountersBySeed);
+
+      /// Una vez encontrado un encuentro de riesgo, comprobamos tiempo
       ///TODO: solo sale el mensaje una vez, es lo correcto?
-      _riskSeed.deleted = 1;
-      updateRiskEncounter(_riskSeed);
+      // _riskSeed.deleted = 1;
+      // updateRiskEncounter(_riskSeed);
     });
 
-    return _riskEncounter;
+    return _riskEncounters;
   }
 
   Future<int> updateRiskEncounter(RiskEncounter _riskEncounter) async {

@@ -51,4 +51,16 @@ class EncounterSeedService {
 
     return _results.map((e) => EncounterSeed.fromJson(e)).toList();
   }
+
+  Future<List<EncounterSeed>> getAllEncounterSeeds(User _user) async {
+    Database _database = await openDatabase(DB_NAME, version: 1);
+
+    List<Map> _results = await _database.rawQuery(
+        'SELECT * FROM encounter_seed '
+            'WHERE  userId = ? ',
+        [_user.id]
+    );
+
+    return _results.map((e) => EncounterSeed.fromJson(e)).toList();
+  }
 }

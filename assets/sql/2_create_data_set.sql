@@ -6,7 +6,7 @@ INSERT INTO user (provinceId, uuid, date, deleted) VALUES (1, 'c6c58fa2-b94a-11e
 
 INSERT INTO encounter_seed (userId, seedUuid, date, deleted) VALUES (1, 'b641ac96-b946-11eb-8529-0242ac130003', 1621490400000, 0);
 
-INSERT INTO encounter (ownSeedId, encounterSeedUuid, latitude, longitude, date, distance, transmitted) VALUES (1, '96ab2600-b946-11eb-8529-0242ac130003', 40.494220, -3.658509, 1621494000000, 0.50, 0);
+INSERT INTO encounter (ownSeedId, encounterSeedUuid, latitude, longitude, date, distance, duration, transmitted) VALUES (1, '96ab2600-b946-11eb-8529-0242ac130003', 40.494220, -3.658509, 1621494000000, 0.50, 0, 0);
 
 INSERT INTO risk_encounter (riskSeedUuid, encounterSeedUuid, latitude, longitude, date, deleted) VALUES ('96ab1fd4-b946-11eb-8529-0242ac130003', 'b641a908-b946-11eb-8529-0242ac130003', 40.399902, -3.695834, 1621494000000, 0);
 INSERT INTO risk_encounter (riskSeedUuid, encounterSeedUuid, latitude, longitude, date, deleted) VALUES ('96ab21fa-b946-11eb-8529-0242ac130003', 'b641b04c-b946-11eb-8529-0242ac130003', 40.395718, -3.702827, 1619938800000, 0);

@@ -34,9 +34,31 @@ class EncounterService {
             date: date,
             distance: distance,
             transmitted: transmitted,
+            duration: 1,
           ).toJson());
     } catch (e) {
       print('Could not insert the encounter: $e');
     }
+  }
+
+  Future<int> updateEncounterDuration(Encounter _encounter) async {
+    Database _database = await openDatabase(DB_NAME, version: 1);
+    int _duration = _encounter.duration + 1;
+
+    return await _database.rawUpdate(
+        'UPDATE $encounterTableName SET duration = ? WHERE id = ?',
+        [_duration, _encounter.id]);
+  }
+
+  ///Método que busque por semilla
+  Future<Encounter> getEncounterByEncounterSeedUuid(String _encounterSeedUuid) async {
+    Database _database = await openDatabase(DB_NAME, version: 1);
+    List<Map> _results = await _database.rawQuery(
+      'SELECT * FROM $encounterTableName WHERE encounterSeedUuid = ? ORDER BY date DESC LIMIT 1',
+    [_encounterSeedUuid]);
+    List<Encounter> _encounterList =
+        _results.map((e) => Encounter.fromJson(e)).toList();
+
+    return _encounterList.isEmpty ? null : _encounterList.first;
   }
 }

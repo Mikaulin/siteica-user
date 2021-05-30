@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:beacons_plugin/beacons_plugin.dart';
 import 'package:bluetooth_enable/bluetooth_enable.dart';
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
+import 'package:siteica_user/models/encounter.dart';
 import 'package:siteica_user/models/encounter_seed.dart';
+import 'package:siteica_user/models/risk_encounter.dart';
 import 'package:siteica_user/models/user.dart';
 import 'package:siteica_user/services/ble_service.dart';
 import 'package:siteica_user/services/encounter_seed_service.dart';
@@ -14,6 +17,7 @@ import 'package:siteica_user/ui/common/info_title.dart';
 import 'package:siteica_user/ui/common/themes.dart';
 import 'package:siteica_user/ui/common/title.dart';
 import 'package:siteica_user/ui/notification.dart';
+import 'dart:io' show Platform;
 
 class HomePage extends StatefulWidget {
   static Route<dynamic> route() => MaterialPageRoute(
@@ -51,6 +55,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   _checkBluetoothAndEnable() async {
+    List<Encounter> _foo = await _encounterService.getEncounters();
+
+    print("foo");
+
     BluetoothEnable.enableBluetooth.then((value) {
       if (value == "true") {
         setState(() {
@@ -63,10 +71,11 @@ class _HomePageState extends State<HomePage> {
   _checkSelfRisk(User _user) async {
     List<EncounterSeed> _encounterSeeds =
         await _encounterSeedService.getEncounterSeeds(_user);
-    EncounterSeed _firstRiskEncounter =
-        await _riskEncounterService.checkSelfRisk(_user, _encounterSeeds);
+    List<RiskEncounter> _myRiskEncounters = await _riskEncounterService
+        .getSelfEncounterRisk(_user, _encounterSeeds);
+
     setState(() {
-      _riskFound = _firstRiskEncounter != null;
+      _riskFound = _myRiskEncounters.isNotEmpty;
     });
   }
 
@@ -95,10 +104,9 @@ class _HomePageState extends State<HomePage> {
       Text(
         _riskFound
             ? "Te recomendamos que contactes con tu centro de salud y sigas "
-            "las recomendaciones que te ofrezcan."
+                "las recomendaciones que te ofrezcan."
             : "Serás informado en caso de que se registre un posible contacto "
                 "de riesgo tras el análisis automatizado.",
-
       ),
       Padding(
         padding: const EdgeInsets.only(bottom: 21.0),
@@ -117,7 +125,7 @@ class _HomePageState extends State<HomePage> {
       ),
       Text(
         "Siteica hace uso del Bluetooth para comunicarse con dispositivos "
-            "cercanos y mantenerte protegido.",
+        "cercanos y mantenerte protegido.",
       )
     ];
 

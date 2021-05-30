@@ -34,6 +34,7 @@ CREATE TABLE encounter
     longitude         FLOAT,
     date              INT,
     distance          FLOAT,
+    duration          INT,
     transmitted       INT,
     FOREIGN KEY (ownSeedId) REFERENCES encounter_seed (id)
 );
