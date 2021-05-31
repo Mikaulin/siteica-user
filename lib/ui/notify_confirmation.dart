@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 import 'package:siteica_user/models/user.dart';
+import 'package:siteica_user/services/api_service.dart';
 import 'package:siteica_user/services/private_notification_service.dart';
 import 'package:siteica_user/services/user_service.dart';
 import 'package:siteica_user/ui/start.dart';
@@ -30,6 +31,7 @@ class _NotifyConfirmationPageState extends State<NotifyConfirmationPage> {
   final _privateNotificationService =
       Injector.appInstance.get<PrivateNotificationService>();
   final _userService = Injector.appInstance.get<UserService>();
+  final _apiService = Injector.appInstance.get<ApiService>();
 
   Future<void> _showDialog() async {
     return showDialog<void>(
@@ -67,6 +69,7 @@ class _NotifyConfirmationPageState extends State<NotifyConfirmationPage> {
     User _user = await _userService.getUser();
     await _privateNotificationService.addPrivateNotification(
         _user, otpValue, diagnosticDate);
+    await _apiService.createNotification(otpValue, diagnosticDate);
     _showDialog();
   }
 
