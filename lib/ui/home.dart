@@ -77,24 +77,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   _checkSelfRisk(User _user) async {
-    RiskEncounterAnalysis _riskEncounterAnalysis =
+    RiskEncounterAnalysis _analysis =
         await _riskEncounterAnalysisService.getLastRiskEncounterAnalysis();
 
-    if (_riskEncounterAnalysis == null ||
-        timeExceeded(
-            _riskEncounterAnalysis.date, ENCOUNTER_RISK_ANALYSIS_TIME_PERIOD)) {
+    if (_analysis == null ||
+        timeExceeded(_analysis.date, RISK_ANALYSIS_TIME_PERIOD)) {
+
       List<EncounterSeed> _encounterSeeds =
           await _encounterSeedService.getEncounterSeeds(_user);
       List<RiskEncounter> _myRiskEncounters = await _riskEncounterService
           .getSelfEncounterRisk(_user, _encounterSeeds);
-
       _riskFound = _myRiskEncounters
           .any((element) => element.duration >= RISK_DURATION_INTERVAL);
-
       _riskEncounterAnalysisService.addRiskEncounterAnalysis(_riskFound);
 
-      setState(() {});
+    } else {
+      _riskFound = _analysis.riskFound == 1;
     }
+
+    setState(() {});
   }
 
   @override

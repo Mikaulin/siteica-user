@@ -41,8 +41,8 @@ CREATE TABLE encounter
 
 CREATE TABLE private_notification
 (
-    id              INTEGER PRIMARY KEY,
-    userId          INTEGER,
+    id             INTEGER PRIMARY KEY,
+    userId         INTEGER,
     otpValue       TEXT,
     diagnosticDate INT,
     submittedDate  INT,
@@ -63,10 +63,10 @@ CREATE TABLE risk_encounter
 
 CREATE TABLE risk_encounter_analysis
 (
-    id                INTEGER PRIMARY KEY,
-    riskFound        INT,
-    date              INT,
-    deleted           INT
+    id        INTEGER PRIMARY KEY,
+    riskFound INT,
+    date      INT,
+    deleted   INT
 );
 
 CREATE TABLE evolution

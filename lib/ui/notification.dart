@@ -4,6 +4,7 @@ import 'package:siteica_user/utils/format_util.dart';
 
 import 'common/themes.dart';
 import 'common/title.dart';
+import 'notify_confirmation.dart';
 
 class NotificationPage extends StatefulWidget {
   static Route<dynamic> route() => MaterialPageRoute(
@@ -15,6 +16,15 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
+  final inputController = TextEditingController();
+  bool _otpCorrect = false;
+
+  @override
+  void dispose() {
+    inputController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime _selectedDate = DateTime.now();
@@ -44,6 +54,7 @@ class _NotificationPageState extends State<NotificationPage> {
             children: [
               CommonTitle(title: "Código de diagnóstico"),
               TextField(
+                controller: inputController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -53,6 +64,11 @@ class _NotificationPageState extends State<NotificationPage> {
                   FilteringTextInputFormatter.digitsOnly,
                   NotificationNumberFormatter(),
                 ],
+                onChanged: (text) {
+                  setState(() {
+                    _otpCorrect = inputController.text.length >= 12;
+                  });
+                },
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -76,8 +92,8 @@ class _NotificationPageState extends State<NotificationPage> {
                   decoration: BoxDecoration(
                     border: Border.all(width: 1.0),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(5.0),
-                        ),
+                      Radius.circular(5.0),
+                    ),
                   ),
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
@@ -88,10 +104,15 @@ class _NotificationPageState extends State<NotificationPage> {
               ),
               ElevatedButton(
                 style: raisedButtonStyle,
-                onPressed: () {
+                onPressed: !_otpCorrect ? null : () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => NotificationPage()),
+                    MaterialPageRoute(
+                      builder: (context) => NotifyConfirmationPage(
+                        selectedDate: _selectedDate,
+                        diagnosticCode: inputController.text,
+                      ),
+                    ),
                   );
                 },
                 child: Text('Notificar'),
