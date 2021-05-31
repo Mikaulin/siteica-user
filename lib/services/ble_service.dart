@@ -68,8 +68,6 @@ startObserver(
   /// Asignar el controlador del stream de datos
   BeaconsPlugin.listenToBeacons(_streamController);
 
-  //await BeaconsPlugin.addRegion(REGION_ID, Uuid.randomUuid().toString());
-
   /// Suscripción al stream
   _streamController.stream.listen(
     (data) async {
