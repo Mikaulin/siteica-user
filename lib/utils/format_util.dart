@@ -15,14 +15,12 @@ class NotificationNumberFormatter extends TextInputFormatter {
   String _format(String value, String separator) {
     value = value.replaceAll(separator, '');
     var newString = '';
-
     for (int i = 0; i < min(value.length, _maxChars); i++) {
       newString += value[i];
       if ((i == 2 || i == 6) && i != value.length - 1) {
         newString += separator;
       }
     }
-
     return newString;
   }
 

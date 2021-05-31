@@ -62,12 +62,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _checkBluetoothAndEnable() async {
-    //TODO: eliminar
-    List<Encounter> _foo = await _encounterService.getEncounters();
-
-    print("foo");
-
-    BluetoothEnable.enableBluetooth.then((value) {
+     BluetoothEnable.enableBluetooth.then((value) {
       if (value == "true") {
         setState(() {
           _bluetoothEnabled = true;

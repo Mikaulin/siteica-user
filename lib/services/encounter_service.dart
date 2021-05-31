@@ -7,9 +7,16 @@ const String encounterTableName = 'encounter';
 class EncounterService {
   Future<List<Encounter>> getEncounters() async {
     Database _database = await openDatabase(DB_NAME, version: 1);
-    List<Map> results = await _database.query(encounterTableName);
 
-    return results.map((todo) => Encounter.fromJson(todo)).toList();
+    int _finishTime = DateTime.now().millisecondsSinceEpoch;
+    int _startTime = _finishTime - ENCOUNTER_RISK_TIME_PERIOD;
+
+    List<Map> _results = await _database.rawQuery(
+        'SELECT * FROM $encounterTableName '
+            'WHERE (date >= ? AND date <= ?) AND deleted = 0',
+        [_startTime, _finishTime]);
+
+    return _results.map((e) => Encounter.fromJson(e)).toList();
   }
 
   Future addEncounter({

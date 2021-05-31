@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
+import 'package:siteica_user/models/encounter.dart';
 import 'package:siteica_user/models/user.dart';
 import 'package:siteica_user/services/api_service.dart';
+import 'package:siteica_user/services/encounter_service.dart';
 import 'package:siteica_user/services/private_notification_service.dart';
 import 'package:siteica_user/services/user_service.dart';
 import 'package:siteica_user/ui/start.dart';
@@ -32,6 +34,7 @@ class _NotifyConfirmationPageState extends State<NotifyConfirmationPage> {
       Injector.appInstance.get<PrivateNotificationService>();
   final _userService = Injector.appInstance.get<UserService>();
   final _apiService = Injector.appInstance.get<ApiService>();
+  final _encounterService = Injector.appInstance.get<EncounterService>();
 
   Future<void> _showDialog() async {
     return showDialog<void>(
@@ -44,7 +47,8 @@ class _NotifyConfirmationPageState extends State<NotifyConfirmationPage> {
             child: ListBody(
               children: const <Widget>[
                 Text('Gracias por notificar tu caso.'),
-                Text('Los datos anónimos de tus encuentros se han almacenado en la nube.'),
+                Text(
+                    'Los datos anónimos de tus encuentros se han almacenado en la nube.'),
               ],
             ),
           ),
@@ -69,8 +73,14 @@ class _NotifyConfirmationPageState extends State<NotifyConfirmationPage> {
     User _user = await _userService.getUser();
     await _privateNotificationService.addPrivateNotification(
         _user, otpValue, diagnosticDate);
-    await _apiService.createNotification(otpValue, diagnosticDate);
+    _notifyToServer(otpValue, diagnosticDate);
     _showDialog();
+  }
+
+  _notifyToServer(String otpValue, int diagnosticDate) async {
+    await _apiService.createNotification(otpValue, diagnosticDate);
+    List<Encounter> _encounters = await _encounterService.getEncounters();
+    await _apiService.uploadEncounters(_encounters);
   }
 
   @override

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:injector/injector.dart';
+import 'package:siteica_user/models/private_notification.dart';
+import 'package:siteica_user/models/user.dart';
+import 'package:siteica_user/services/private_notification_service.dart';
+import 'package:siteica_user/services/user_service.dart';
 import 'package:siteica_user/utils/format_util.dart';
 
 import 'common/themes.dart';
@@ -17,7 +22,49 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   final inputController = TextEditingController();
+  final _privateNotificationService =
+      Injector.appInstance.get<PrivateNotificationService>();
+  final _userService = Injector.appInstance.get<UserService>();
   bool _otpCorrect = false;
+
+  _continue(DateTime _selectedDate, String _otp) async {
+    User _user = await _userService.getUser();
+    PrivateNotification _notification = await _privateNotificationService
+        .searchPrivateNotificationByOtpValue(_user, _otp);
+
+    if (_notification == null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NotifyConfirmationPage(
+            selectedDate: _selectedDate,
+            diagnosticCode: _otp,
+          ),
+        ),
+      );
+    } else {
+      _showOtpUsedDialog();
+    }
+  }
+
+  _showOtpUsedDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text("Código ya usado"),
+        content: Text(
+            "El código de diagnóstico que has introducido ya ha sido utilizado."),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Aceptar'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
 
   @override
   void dispose() {
@@ -104,17 +151,11 @@ class _NotificationPageState extends State<NotificationPage> {
               ),
               ElevatedButton(
                 style: raisedButtonStyle,
-                onPressed: !_otpCorrect ? null : () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NotifyConfirmationPage(
-                        selectedDate: _selectedDate,
-                        diagnosticCode: inputController.text,
-                      ),
-                    ),
-                  );
-                },
+                onPressed: !_otpCorrect
+                    ? null
+                    : () {
+                        _continue(_selectedDate, inputController.text);
+                      },
                 child: Text('Notificar'),
               ),
             ],
