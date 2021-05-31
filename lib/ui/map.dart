@@ -38,7 +38,7 @@ class _MapPageState extends State<MapPage> {
               Icons.warning_amber_outlined,
               color: Colors.red,
               size: 24.0,
-              semanticLabel: 'Text to announce in accessibility modes',
+              semanticLabel: 'Contacto de riesgo',
             ),
           ),
         ),
@@ -61,7 +61,7 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("*Map test"),
+        title: Text("Mapa de infección"),
       ),
       body: _isLoading
           ? CommonProgressIndicator()
