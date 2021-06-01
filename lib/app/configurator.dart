@@ -3,6 +3,7 @@ import 'package:siteica_user/services/api_service.dart';
 import 'package:siteica_user/services/database_service.dart';
 import 'package:siteica_user/services/encounter_seed_service.dart';
 import 'package:siteica_user/services/encounter_service.dart';
+import 'package:siteica_user/services/evolution_province_service.dart';
 import 'package:siteica_user/services/evolution_service.dart';
 import 'package:siteica_user/services/private_notification_service.dart';
 import 'package:siteica_user/services/province_service.dart';
@@ -30,4 +31,5 @@ void setupDependencyInjector() {
       () => PrivateNotificationService());
   injector.registerDependency<ApiService>(() => ApiService());
   injector.registerDependency<EvolutionService>(() => EvolutionService());
+  injector.registerDependency<EvolutionProvinceService>(() => EvolutionProvinceService());
 }
