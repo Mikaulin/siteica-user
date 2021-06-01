@@ -13,9 +13,26 @@ class EvolutionService {
 
     List<Map> _results = await _database.rawQuery(
         'SELECT * FROM $evolutionTableName '
-            'WHERE (date >= ? AND date <= ?) AND deleted = 0',
+        'WHERE (date >= ? AND date <= ?)',
         [_startTime, _finishTime]);
 
     return _results.map((e) => Evolution.fromJson(e)).toList();
+  }
+
+  Future<int> getTotal() async {
+    Database _database = await openDatabase(DB_NAME, version: 1);
+
+    return Sqflite.firstIntValue(await _database
+        .rawQuery('SELECT SUM(totalCases) FROM $evolutionTableName '));
+  }
+
+  Future<int> getTotalBetweenDates(int _startTime, int _finishTime) async {
+    Database _database = await openDatabase(DB_NAME, version: 1);
+
+    return Sqflite.firstIntValue(await _database.rawQuery(
+      'SELECT SUM(totalCases) FROM $evolutionTableName '
+      'WHERE (date >= ? AND date <= ?)',
+        [_startTime, _finishTime]
+    ));
   }
 }

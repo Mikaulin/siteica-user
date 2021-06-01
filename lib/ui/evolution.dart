@@ -23,9 +23,26 @@ class _EvolutionPageState extends State<EvolutionPage> {
       Injector.appInstance.get<EvolutionProvinceService>();
   List<charts.Series<LinearEvolution, DateTime>> _chartData = [];
   List<Widget> _dataByProvince = [];
+  int _total = 0;
+  int _lastMonthTotal = 0;
+  int _lastWeekTotal = 0;
+
+  _getTotals() async {
+    _total = await _evolutionService.getTotal();
+
+    var now = new DateTime.now();
+    var lastDayPrevMonth = new DateTime(now.year, now.month, 0);
+    var firstDayPrevMonth = new DateTime(now.year, now.month - 1, 1);
+
+    _lastMonthTotal = await _evolutionService.getTotalBetweenDates(
+      firstDayPrevMonth.millisecondsSinceEpoch,
+      lastDayPrevMonth.millisecondsSinceEpoch,
+    );
+  }
 
   _getEvolutionData() async {
     List<Evolution> _evolution = await _evolutionService.getEvolution();
+    _total = await _evolutionService.getTotal();
 
     List<LinearEvolution> _linearEvolution = [];
     _evolution.forEach((element) {
@@ -89,6 +106,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
   void initState() {
     _getEvolutionData();
     _getDataByProvince();
+    _getTotals();
     super.initState();
   }
 
@@ -104,13 +122,72 @@ class _EvolutionPageState extends State<EvolutionPage> {
                 right: 18.0, left: 12.0, top: 24, bottom: 12),
             child: Column(
               children: [
+                CommonTitle(title: "Resumen"),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                              "Esta semana",
+                              style: TextStyle(color: Colors.black45),
+                            ),
+                          ),
+                          Text("0"),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                              "Mes anterior",
+                              style: TextStyle(color: Colors.black45),
+                            ),
+                          ),
+                          Text(_lastMonthTotal.toString()),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                              "Total",
+                              style: TextStyle(color: Colors.black45),
+                            ),
+                          ),
+                          Text(
+                            _total.toString(),
+                            style: TextStyle(
+                              color: Colors.indigo,
+                              fontSize: 21.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
                 CommonTitle(title: "Casos diarios"),
-                Container(
-                  height: 300,
-                  child: charts.TimeSeriesChart(
-                    _chartData,
-                    animate: true,
-                    dateTimeFactory: const charts.LocalDateTimeFactory(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black12,
+                    ),
+                    height: 300,
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: charts.TimeSeriesChart(
+                      _chartData,
+                      animate: true,
+                      dateTimeFactory: const charts.LocalDateTimeFactory(),
+                    ),
                   ),
                 ),
                 CommonTitle(title: "Provincia"),
