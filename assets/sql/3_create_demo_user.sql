@@ -15,3 +15,28 @@ INSERT INTO risk_encounter (riskSeedUuid, encounterSeedUuid, latitude, longitude
 INSERT INTO risk_encounter (riskSeedUuid, encounterSeedUuid, latitude, longitude, date, duration, deleted) VALUES ('96ab28bc-b946-11eb-8529-0242ac130003', 'b641af8e-b946-11eb-8529-0242ac130003', 43.307278, -1.892087, 1621506491938, 350, 0);
 INSERT INTO risk_encounter (riskSeedUuid, encounterSeedUuid, latitude, longitude, date, duration, deleted) VALUES ('96ab2a92-b946-11eb-8529-0242ac130003', 'b641b47a-b946-11eb-8529-0242ac130003', 43.310581, -1.896326, 1621506491938, 500, 0);
 
+INSERT INTO evolution (totalCases, date, deleted) VALUES (20, 1622527200000, 0);
+INSERT INTO evolution (totalCases, date, deleted) VALUES (10, 1622440800000, 0);
+INSERT INTO evolution (totalCases, date, deleted) VALUES (35, 1622354400000, 0);
+INSERT INTO evolution (totalCases, date, deleted) VALUES (45, 1622268000000, 0);
+INSERT INTO evolution (totalCases, date, deleted) VALUES (65, 1622181600000, 0);
+INSERT INTO evolution (totalCases, date, deleted) VALUES (55, 1622095200000, 0);
+INSERT INTO evolution (totalCases, date, deleted) VALUES (35, 1622008800000, 0);
+INSERT INTO evolution (totalCases, date, deleted) VALUES (25, 1621922400000, 0);
+INSERT INTO evolution (totalCases, date, deleted) VALUES (15, 1621836000000, 0);
+
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (1, 20, 1622527200000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (1, 10, 1622440800000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (1, 35, 1622354400000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (1, 45, 1622268000000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (1, 65, 1622181600000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (2, 5, 1622527200000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (2, 1, 1622440800000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (2, 3, 1622354400000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (2, 4, 1622268000000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (2, 6, 1622181600000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (3, 4, 1622527200000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (3, 12, 1622440800000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (3, 25, 1622354400000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (3, 23, 1622268000000, 0);
+INSERT INTO evolution_province (provinceId, totalCases, date, deleted) VALUES (3, 5, 1622181600000, 0);

@@ -3,6 +3,7 @@ import 'package:siteica_user/services/api_service.dart';
 import 'package:siteica_user/services/database_service.dart';
 import 'package:siteica_user/services/encounter_seed_service.dart';
 import 'package:siteica_user/services/encounter_service.dart';
+import 'package:siteica_user/services/evolution_service.dart';
 import 'package:siteica_user/services/private_notification_service.dart';
 import 'package:siteica_user/services/province_service.dart';
 import 'package:siteica_user/services/risk_encounter_analysis_service.dart';
@@ -26,7 +27,7 @@ void setupDependencyInjector() {
   injector.registerDependency<RiskEncounterAnalysisService>(
       () => RiskEncounterAnalysisService());
   injector.registerDependency<PrivateNotificationService>(
-          () => PrivateNotificationService());
-  injector.registerDependency<ApiService>(
-          () => ApiService());
+      () => PrivateNotificationService());
+  injector.registerDependency<ApiService>(() => ApiService());
+  injector.registerDependency<EvolutionService>(() => EvolutionService());
 }
