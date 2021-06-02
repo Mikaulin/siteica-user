@@ -5,6 +5,8 @@ import 'package:siteica_user/models/evolution_province_total.dart';
 import 'package:siteica_user/services/evolution_province_service.dart';
 import 'package:siteica_user/services/evolution_service.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:siteica_user/ui/common/linear_evolution.dart';
+
 
 import 'common/title.dart';
 
@@ -38,6 +40,14 @@ class _EvolutionPageState extends State<EvolutionPage> {
       firstDayPrevMonth.millisecondsSinceEpoch,
       lastDayPrevMonth.millisecondsSinceEpoch,
     );
+
+    var firstDayPrevWeek = DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: now.weekday - 1));
+
+    _lastWeekTotal = await _evolutionService.getTotalBetweenDates(
+      firstDayPrevWeek.millisecondsSinceEpoch,
+      now.millisecondsSinceEpoch,
+    );
   }
 
   _getEvolutionData() async {
@@ -59,8 +69,6 @@ class _EvolutionPageState extends State<EvolutionPage> {
         data: _linearEvolution,
       )
     ];
-
-    setState(() {});
   }
 
   _getDataByProvince() async {
@@ -99,7 +107,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
         ),
       );
     });
-    setState(() {});
+
   }
 
   @override
@@ -131,31 +139,45 @@ class _EvolutionPageState extends State<EvolutionPage> {
                       Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
+                            padding: const EdgeInsets.only(bottom: 16.0),
                             child: Text(
                               "Esta semana",
                               style: TextStyle(color: Colors.black45),
                             ),
                           ),
-                          Text("0"),
+                          Text(
+                            _lastWeekTotal.toString(),
+                            style: TextStyle(
+                              color: Colors.lightGreen,
+                              fontSize: 21.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                       Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
+                            padding: const EdgeInsets.only(bottom: 16.0),
                             child: Text(
                               "Mes anterior",
                               style: TextStyle(color: Colors.black45),
                             ),
                           ),
-                          Text(_lastMonthTotal.toString()),
+                          Text(
+                            _lastMonthTotal.toString(),
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 21.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                       Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
+                            padding: const EdgeInsets.only(bottom: 16.0),
                             child: Text(
                               "Total",
                               style: TextStyle(color: Colors.black45),
@@ -199,11 +221,4 @@ class _EvolutionPageState extends State<EvolutionPage> {
       ),
     );
   }
-}
-
-class LinearEvolution {
-  final DateTime date;
-  final int total;
-
-  LinearEvolution(this.date, this.total);
 }
