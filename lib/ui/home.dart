@@ -20,8 +20,6 @@ import 'package:siteica_user/ui/common/themes.dart';
 import 'package:siteica_user/ui/common/title.dart';
 import 'package:siteica_user/ui/notification.dart';
 import 'package:siteica_user/utils/constants.dart';
-import 'dart:io' show Platform;
-
 import 'package:siteica_user/utils/time_util.dart';
 
 class HomePage extends StatefulWidget {

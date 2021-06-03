@@ -7,7 +7,6 @@ import 'package:siteica_user/services/evolution_service.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:siteica_user/ui/common/linear_evolution.dart';
 
-
 import 'common/title.dart';
 
 class EvolutionPage extends StatefulWidget {
@@ -112,7 +111,6 @@ class _EvolutionPageState extends State<EvolutionPage> {
         ),
       );
     });
-
   }
 
   @override
@@ -127,7 +125,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("*Evolution test"),
+        title: Text("Datos de evolución"),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -151,7 +149,9 @@ class _EvolutionPageState extends State<EvolutionPage> {
                             ),
                           ),
                           Text(
-                            _lastWeekTotal.toString(),
+                            _lastWeekTotal == null
+                                ? "-"
+                                : _lastWeekTotal.toString(),
                             style: TextStyle(
                               color: Colors.lightGreen,
                               fontSize: 21.0,
@@ -170,7 +170,9 @@ class _EvolutionPageState extends State<EvolutionPage> {
                             ),
                           ),
                           Text(
-                            _lastMonthTotal.toString(),
+                            _lastMonthTotal == null
+                                ? "-"
+                                : _lastMonthTotal.toString(),
                             style: TextStyle(
                               color: Colors.redAccent,
                               fontSize: 21.0,
@@ -189,7 +191,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
                             ),
                           ),
                           Text(
-                            _total.toString(),
+                            _total == null ? "-" : _total.toString(),
                             style: TextStyle(
                               color: Colors.indigo,
                               fontSize: 21.0,
