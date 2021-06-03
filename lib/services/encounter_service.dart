@@ -13,7 +13,7 @@ class EncounterService {
 
     List<Map> _results = await _database.rawQuery(
         'SELECT * FROM $encounterTableName '
-            'WHERE (date >= ? AND date <= ?) AND deleted = 0',
+            'WHERE (date >= ? AND date <= ?)',
         [_startTime, _finishTime]);
 
     return _results.map((e) => Encounter.fromJson(e)).toList();

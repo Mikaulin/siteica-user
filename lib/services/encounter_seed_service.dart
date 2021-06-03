@@ -57,7 +57,7 @@ class EncounterSeedService {
 
     List<Map> _results = await _database.rawQuery(
         'SELECT * FROM encounter_seed '
-            'WHERE  userId = ? ',
+            'WHERE userId = ? ',
         [_user.id]
     );
 
