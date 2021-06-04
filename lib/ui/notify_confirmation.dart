@@ -81,6 +81,13 @@ class _NotifyConfirmationPageState extends State<NotifyConfirmationPage> {
     await _apiService.createNotification(otpValue, diagnosticDate);
     List<Encounter> _encounters = await _encounterService.getEncounters();
     await _apiService.uploadEncounters(_encounters);
+    _updateEncounters(_encounters);
+  }
+
+  _updateEncounters(List<Encounter> _encounters) async {
+    _encounters.forEach((element) {
+      _encounterService.updateEncounterTransmitted(element);
+    });
   }
 
   @override

@@ -57,6 +57,14 @@ class EncounterService {
         [_duration, _encounter.id]);
   }
 
+  Future<int> updateEncounterTransmitted(Encounter _encounter) async {
+    Database _database = await openDatabase(DB_NAME, version: 1);
+
+    return await _database.rawUpdate(
+        'UPDATE $encounterTableName SET transmitted = ? WHERE id = ?',
+        [1, _encounter.id]);
+  }
+
   ///Método que busque por semilla
   Future<Encounter> getEncounterByEncounterSeedUuid(String _encounterSeedUuid) async {
     Database _database = await openDatabase(DB_NAME, version: 1);

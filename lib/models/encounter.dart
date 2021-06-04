@@ -12,7 +12,7 @@ class Encounter {
   final int date;
   final double distance;
   final int duration;
-  final int transmitted;
+  int transmitted;
 
   Encounter({
     this.id,

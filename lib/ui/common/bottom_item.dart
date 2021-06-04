@@ -19,7 +19,7 @@ class BottomItem {
     BottomItem(
       page: HomePage(),
       icon: Icon(Icons.home),
-      title: "Home",
+      title: "Inicio",
     ),
     BottomItem(
       page: MapPage(),
