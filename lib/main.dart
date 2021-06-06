@@ -25,20 +25,6 @@ class _SiteicaAppState extends State<SiteicaApp> {
   bool _isLoading = true;
   User _user;
 
-  initDatabaseAndGetUser() async {
-    await _databaseService.initialise();
-    _user = await _userService.getUser();
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initDatabaseAndGetUser();
-  }
-
   @override
   Widget build(BuildContext context) {
     return _isLoading
@@ -55,5 +41,20 @@ class _SiteicaAppState extends State<SiteicaApp> {
             ),
             home: _user == null ? WelcomePage() : StartPage(),
           );
+  }
+
+
+  initDatabaseAndGetUser() async {
+    await _databaseService.initialise();
+    _user = await _userService.getUser();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initDatabaseAndGetUser();
   }
 }

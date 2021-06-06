@@ -39,17 +39,13 @@ class RiskEncounterService {
     User _user,
     List<EncounterSeed> _myEncounterSeeds,
   ) async {
-    /// Encuentros de riesgo
     List<RiskEncounter> _riskEncounters = await getAllRiskEncounters();
-
     List<RiskEncounter> _myRiskEncounters = [];
-
     _myEncounterSeeds.forEach((_myEncounterSeed) {
       List<RiskEncounter> _myRiskEncountersBySeed = _riskEncounters
           .where((_riskEncounter) =>
               _riskEncounter.encounterSeedUuid == _myEncounterSeed.seedUuid)
           .toList();
-
       _myRiskEncounters.addAll(_myRiskEncountersBySeed);
     });
 

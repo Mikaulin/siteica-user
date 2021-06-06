@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _checkBluetoothAndEnable() async {
-     BluetoothEnable.enableBluetooth.then((value) {
+    BluetoothEnable.enableBluetooth.then((value) {
       if (value == "true") {
         setState(() {
           _bluetoothEnabled = true;
@@ -75,7 +75,6 @@ class _HomePageState extends State<HomePage> {
 
     if (_analysis == null ||
         timeExceeded(_analysis.date, RISK_ANALYSIS_TIME_PERIOD)) {
-
       List<EncounterSeed> _encounterSeeds =
           await _encounterSeedService.getEncounterSeeds(_user);
       List<RiskEncounter> _myRiskEncounters = await _riskEncounterService
@@ -83,11 +82,9 @@ class _HomePageState extends State<HomePage> {
       _riskFound = _myRiskEncounters
           .any((element) => element.duration >= RISK_DURATION_INTERVAL);
       _riskEncounterAnalysisService.addRiskEncounterAnalysis(_riskFound);
-
     } else {
       _riskFound = _analysis.riskFound == 1;
     }
-
     setState(() {});
   }
 

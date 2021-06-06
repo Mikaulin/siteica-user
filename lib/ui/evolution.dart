@@ -30,26 +30,23 @@ class _EvolutionPageState extends State<EvolutionPage> {
 
   _getTotals() async {
     _total = await _evolutionService.getTotal();
-    _getLastMonthTotal();
-    _getLastWeekTotal();
+    var now = new DateTime.now();
+    _getLastMonthTotal(now);
+    _getLastWeekTotal(now);
   }
 
-  _getLastMonthTotal() async {
-    var now = new DateTime.now();
+  _getLastMonthTotal(DateTime now) async {
     var lastDayPrevMonth = new DateTime(now.year, now.month, 0);
     var firstDayPrevMonth = new DateTime(now.year, now.month - 1, 1);
-
     _lastMonthTotal = await _evolutionService.getTotalBetweenDates(
       firstDayPrevMonth.millisecondsSinceEpoch,
       lastDayPrevMonth.millisecondsSinceEpoch,
     );
   }
 
-  _getLastWeekTotal() async {
-    var now = new DateTime.now();
+  _getLastWeekTotal(DateTime now) async {
     var firstDayPrevWeek = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
-
     _lastWeekTotal = await _evolutionService.getTotalBetweenDates(
       firstDayPrevWeek.millisecondsSinceEpoch,
       now.millisecondsSinceEpoch,

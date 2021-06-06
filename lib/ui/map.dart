@@ -35,7 +35,7 @@ class _MapPageState extends State<MapPage> {
           point: LatLng(element.latitude, element.longitude),
           builder: (ctx) => Container(
             child: Icon(
-              Icons.warning_amber_outlined,
+              Icons.warning_sharp,
               color: Colors.red,
               size: 24.0,
               semanticLabel: 'Contacto de riesgo',
@@ -44,8 +44,21 @@ class _MapPageState extends State<MapPage> {
         ),
       );
     });
+  }
 
+  _getCurrentPosition() async {
     _position = await determinePosition();
+    _riskMarkers.add(
+      Marker(
+        width: 80.0,
+        height: 80.0,
+        point: LatLng(_position.latitude, _position.longitude),
+        builder: (ctx) => Container(
+            child: Icon(Icons.location_pin,
+                size: 32.0, semanticLabel: 'Ubicación actual')),
+      ),
+    );
+
     setState(() {
       _isLoading = false;
     });
@@ -54,6 +67,7 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     _getRiskEncounters();
+    _getCurrentPosition();
     super.initState();
   }
 
