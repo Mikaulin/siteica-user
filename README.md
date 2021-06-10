@@ -2,15 +2,12 @@
 
 Anonymous Contact Tracing App
 
-## Getting Started
+## Abstract
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+In this PFG, the multiplatform mobile application has been developed for the sick user
+making use of Flutter, Google's SDK that allows making applications for mobile, web, and
+desktop, compiled natively. This application collects and transmits the information of the
+user's movement and interactions with other applications. It is also responsible for displaying
+information regarding the infection that exists in a specific environment. Finally, it uses
+Bluetooth low energy technology (BLE) as a solution that has been considered optimal for
+exchanging close information between mobile devices.
