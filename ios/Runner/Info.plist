@@ -41,5 +41,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>SITEICA necesita permisos de localización para escanear dispositivos cercanos.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>SITEICA necesita permisos de localización para escanear dispositivos cercanos.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>SITEICA necesita permisos de localización para escanear dispositivos cercanos.</string>
 </dict>
 </plist>
