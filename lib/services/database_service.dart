@@ -16,7 +16,8 @@ class DatabaseService {
       migrationFiles: [
         '1_create_schema.sql',
         '2_create_data_set.sql',
-        '3_create_demo_user.sql',
+        // Only for test purposes
+        // '3_create_demo_user.sql',
       ],
       verbose: true,
     );
